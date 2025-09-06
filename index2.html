@@ -1,108 +1,117 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Proyecto RA con Banderas</title>
-
-  <!-- A-Frame y MindAR -->
-  <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
-
+  <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image.prod.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.1.5/dist/mindar-image-aframe.prod.js"></script>
   <style>
     body, html {
       margin: 0;
       padding: 0;
-      height: 100%;
+      overflow: hidden;
       font-family: Arial, sans-serif;
-      background: #f2f2f2;
+      text-align: center;
+      background: #1e3d4f;
+      color: white;
     }
     #intro {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100%;
-      text-align: center;
-      padding: 20px;
-    }
-    #intro h1 {
-      font-size: 24px;
-      margin-bottom: 10px;
-    }
-    #intro p {
-      font-size: 18px;
-      margin-bottom: 20px;
+      background: #1e3d4f;
+      z-index: 10;
     }
     #startBtn {
-      padding: 12px 20px;
+      margin-top: 20px;
+      padding: 12px 24px;
       font-size: 18px;
       border: none;
       border-radius: 8px;
-      background: #0078d7;
+      background: #00bfff;
       color: white;
       cursor: pointer;
     }
     #startBtn:hover {
-      background: #005fa3;
+      background: #0099cc;
     }
     #ar-container {
+      width: 100vw;
+      height: 100vh;
       display: none;
-      width: 100%;
-      height: 100%;
     }
   </style>
 </head>
 <body>
 
-  <!-- Pantalla de introducción -->
-  <div id="intro">
-    <h1>Bienvenido a la Experiencia RA</h1>
-    <p>Escanea las banderas para descubrir modelos, videos, trivias y estadísticas.</p>
-    <button id="startBtn">Activar Cámara RA</button>
-  </div>
+<div id="intro">
+  <h1>Bienvenido a la Experiencia RA</h1>
+  <p>Escanea las banderas para descubrir modelos, videos, trivias y estadísticas.</p>
+  <button id="startBtn">Activar Cámara RA</button>
+</div>
 
-  <!-- Contenedor de la experiencia RA -->
-  <div id="ar-container">
-    <a-scene
-      mindar-image="imageTargetSrc: assets/targets/targets.mind;" 
-      color-space="sRGB" 
-      renderer="colorManagement: true, physicallyCorrectLights"
-      vr-mode-ui="enabled: false"
-      device-orientation-permission-ui="enabled: false"
-      embedded
-    >
-      <a-assets>
-        <!-- Ejemplo: modelos/videos -->
-        <video id="video1" src="assets/videos/argentina.mp4" loop muted></video>
-        <a-asset-item id="modelo1" src="assets/modelos/mate/scene.gltf"></a-asset-item>
-      </a-assets>
+<div id="ar-container">
+  <a-scene 
+    mindar-image="imageTargetSrc: assets/targets/targets.mind; autoStart: true; uiScanning: no; uiLoading: yes;" 
+    embedded 
+    renderer="colorManagement: true; precision: medium;" 
+    vr-mode-ui="enabled: false">
 
-      <!-- Cámara -->
-      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    <a-assets>
+      <video id="video1" src="assets/videos/argentina.mp4" preload="auto" loop></video>
+      <video id="video2" src="assets/videos/brasil.mp4" preload="auto" loop></video>
+    </a-assets>
 
-      <!-- Target 1: bandera A -->
-      <a-entity mindar-image-target="targetIndex: 0">
-        <a-video src="assets/videos/argentina.mp4" width="1.5" height="1" position="0 0 0"></a-video>
-      </a-entity>
+    <a-camera mindar-image-camera></a-camera>
 
-      <!-- Target 2: bandera B -->
-      <a-entity mindar-image-target="targetIndex: 1">
-        <a-gltf-model src="assets/modelos/mate/scene.gltf" scale="0.3 0.3 0.3" position="0 -0.5 0"></a-gltf-model>
-      </a-entity>
-    </a-scene>
-  </div>
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+    </a-entity>
 
-  <script>
-    const startBtn = document.getElementById("startBtn");
-    const intro = document.getElementById("intro");
-    const arContainer = document.getElementById("ar-container");
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-video src="#video2" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+    </a-entity>
+  </a-scene>
+</div>
 
-    startBtn.addEventListener("click", () => {
-      intro.style.display = "none";
-      arContainer.style.display = "block";
+<script>
+  const startBtn = document.getElementById("startBtn");
+  const intro = document.getElementById("intro");
+  const arContainer = document.getElementById("ar-container");
+
+  startBtn.addEventListener("click", () => {
+    intro.style.display = "none";
+    arContainer.style.display = "block";
+    window.dispatchEvent(new Event("resize"));
+
+    // Agregar eventos a cada target
+    const targets = document.querySelectorAll("[mindar-image-target]");
+    targets.forEach(target => {
+      target.addEventListener("targetFound", () => {
+        const video = target.querySelector("a-video");
+        if (video) {
+          video.setAttribute("visible", "true");
+          video.components.material.material.map.image.play();
+        }
+      });
+      target.addEventListener("targetLost", () => {
+        const video = target.querySelector("a-video");
+        if (video) {
+          video.setAttribute("visible", "false");
+          video.components.material.material.map.image.pause();
+        }
+      });
     });
-  </script>
+  });
+</script>
 
 </body>
 </html>
+
