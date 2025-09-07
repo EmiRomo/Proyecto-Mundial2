@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+  </head>
+  <style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    font-family: Arial, sans-serif;
+    background: #1e3d4f;
+    color: white;
+    width: 100%;
+    height: 100%;
+  }
+  #intro {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #1e3d4f;
+    z-index: 10;
+  }
+  #startBtn {
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 18px;
+    border: none;
+    border-radius: 8px;
+    background: #00bfff;
+    color: white;
+    cursor: pointer;
+  }
+  #startBtn:hover { background: #0099cc; }
+
+  #ar-container {
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    position: fixed;
+    top: 0; left: 0;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    z-index: 1;
+  }
+  #ar-container.active {
+    opacity: 1;
+  }
+
+  #buttons-panel {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 10px;
+      z-index: 20;
+    }
+    #buttons-panel button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background: #00bfff;
+      color: white;
+      cursor: pointer;
+    }
+    #buttons-panel button:hover {
+      background: #0099cc;
+    }
+
+</style>
+
+<body>
+<div id="intro">
+  <h1>Bienvenido a la Experiencia RA</h1>
+  <p>Escanea las banderas para descubrir modelos, videos, trivias y estadísticas.</p>
+  <button id="startBtn">Activar Cámara RA</button>
+</div>
+
+<div id="ar-container">
+  <a-scene mindar-image="imageTargetSrc:./assets/targets/targets.mind" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+    
+    <a-assets>
+      <video id="video1" src="assets/videos/argentina.mp4" preload="auto" loop></video>
+      <video id="video2" src="assets/videos/brasil.mp4" preload="auto" loop></video>
+    </a-assets>
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+    <a-entity mindar-image-target="targetIndex: 0">
+      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+    </a-entity>
+    <a-entity mindar-image-target="targetIndex: 1">
+      <a-video src="#video2" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+    </a-entity>
+    
+  </a-scene>
+</div>
+
+<div id="buttons-panel">
+  <button>Botón 1</button>
+  <button>Botón 2</button>
+  <button>Botón 3</button>
+  <button>Botón 4</button>
+</div>
+
+<script>
+  const startBtn = document.getElementById("startBtn");
+  const intro = document.getElementById("intro");
+  const arContainer = document.getElementById("ar-container");
+  const buttonsPanel = document.getElementById("buttons-panel");
+
+  startBtn.addEventListener("click", () => {
+    intro.style.display = "none";
+    arContainer.classList.add("active");
+
+    // Forzar recalculo del tamaño
+    setTimeout(() => {
+      window.dispatchEvent(new Event("resize"));
+    }, 300);
+    
+    // Eventos de targets
+
+    const targets = document.querySelectorAll("[mindar-image-target]");
+    targets.forEach(target => {
+      target.addEventListener("targetFound", () => {
+        console.log("🎯 Bandera detectada");
+        buttonsPanel.style.display = "flex";
+      });
+      target.addEventListener("targetLost", () => {
+        console.log("❌ Bandera perdida");
+        buttonsPanel.style.display = "none";
+      });
+    });
+    
+  });
+
+  
+
+</script>
+
+</html>
+
+
+
