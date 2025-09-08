@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -54,26 +53,47 @@
   }
 
   #buttons-panel {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: none;
-      gap: 10px;
-      z-index: 20;
-    }
-    #buttons-panel button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 6px;
-      background: #00bfff;
-      color: white;
-      cursor: pointer;
-    }
-    #buttons-panel button:hover {
-      background: #0099cc;
-    }
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: none;
+    gap: 10px;
+    z-index: 20;
+  }
+
+  #buttons-panel button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    background: #00bfff;
+    color: white;
+    cursor: pointer;
+  }
+
+  #buttons-panel button:hover {background: #0099cc;}
+
+  #statsBox, #triviaBox {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.8);
+    padding: 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 25;
+    max-width: 300px;
+    text-align: center;
+  }
+
+  #triviaBox button {
+    display: block;
+    margin: 8px auto;
+    padding: 8px 16px;
+    font-size: 14px;
+  }
 
 </style>
 
@@ -90,25 +110,56 @@
     <a-assets>
       <video id="video1" src="assets/videos/argentina.mp4" preload="auto" loop></video>
       <video id="video2" src="assets/videos/brasil.mp4" preload="auto" loop></video>
+      <a-asset-item id="model1" src="assets/modelos/mate/scene.gltf"></a-asset-item>
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
+    <!-- Targets -->
     <a-entity mindar-image-target="targetIndex: 0">
       <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
     </a-entity>
+
     <a-entity mindar-image-target="targetIndex: 1">
       <a-video src="#video2" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 2">
+      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+    </a-entity>
+
+    <a-entity mindar-image-target="targetIndex: 3">
+      <a-video src="#video2" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
     </a-entity>
     
   </a-scene>
 </div>
 
 <div id="buttons-panel">
-  <button>Botón 1</button>
-  <button>Botón 2</button>
-  <button>Botón 3</button>
-  <button>Botón 4</button>
+  <button id="btnStats">Estadísticas</button>
+  <button id="btnVideo">Video</button>
+  <button id="btnTrivia">Trivia</button>
+  <button id="btnModel">Modelo</button>
+</div>
+
+<div id="statsBox">
+  <h3>📊 Estadísticas</h3>
+  <p>País: Argentina</p>
+  <p>Mundiales Ganados: 3</p>
+  <p>Jugador Estrella: Messi</p>
+</div>
+
+<div id="triviaBox">
+  <h3>❓ Trivia</h3>
+  <p>¿Cuántos mundiales ha ganado Brasil?</p>
+  <button onclick="checkAnswer(3)">3</button>
+  <button onclick="checkAnswer(5)">5</button>
+  <button onclick="checkAnswer(7)">7</button>
+  <p id="triviaResult"></p>
 </div>
 
 <script>
@@ -117,14 +168,20 @@
   const arContainer = document.getElementById("ar-container");
   const buttonsPanel = document.getElementById("buttons-panel");
 
+  const statsBox = document.getElementById("statsBox");
+  const triviaBox = document.getElementById("triviaBox");
+  const triviaResult = document.getElementById("triviaResult");
+
+  const videoPlane = document.getElementById("videoPlane");
+  const video1 = document.getElementById("video1");
+  const modelEntity = document.getElementById("modelEntity");
+
   startBtn.addEventListener("click", () => {
     intro.style.display = "none";
     arContainer.classList.add("active");
 
     // Forzar recalculo del tamaño
-    setTimeout(() => {
-      window.dispatchEvent(new Event("resize"));
-    }, 300);
+    setTimeout(() => {window.dispatchEvent(new Event("resize"));}, 300);
     
     // Eventos de targets
 
@@ -137,12 +194,62 @@
       target.addEventListener("targetLost", () => {
         console.log("❌ Bandera perdida");
         buttonsPanel.style.display = "none";
+        statsBox.style.display = "none";
+        triviaBox.style.display = "none";
+        videoPlane.setAttribute("visible", "false");
+        modelEntity.setAttribute("visible", "false");
+        video1.pause();
       });
+    })
+
+    // Estadisticas
+    document.getElementById("btnStats").addEventListener("click", () => {
+      statsBox.style.display = statsBox.style.display === "block" ? "none" : "block";
+      triviaBox.style.display = "none";
     });
+
+    // Video
+    document.getElementById("btnVideo").addEventListener("click", () => {
+      const isVisible = videoPlane.getAttribute("visible");
+      videoPlane.setAttribute("visible", !isVisible);
+      if (!isVisible) video1.play(); else video1.pause();
+    });
+
+    // Trivia
+    document.getElementById("btnTrivia").addEventListener("click", () => {
+      triviaBox.style.display = triviaBox.style.display === "block" ? "none" : "block";
+      statsBox.style.display = "none";
+    });
+
+    // Modelo
+    document.getElementById("btnModel").addEventListener("click", () => {
+      const isVisible = modelEntity.getAttribute("visible");
+      modelEntity.setAttribute("visible", !isVisible);
+      if (!isVisible) {
+        modelEntity.setAttribute("animation", {
+          property: "rotation",
+          to: "0 360 0",
+          loop: true,
+          dur: 4000,
+          easing: "linear"
+        });
+      } else {
+        modelEntity.removeAttribute("animation");
+      }
+    });
+
+    // Trivia check
+    function checkAnswer(ans) {
+      if (ans === 5) {
+        triviaResult.textContent = "✅ Correcto!";
+        triviaResult.style.color = "lightgreen";
+      } else {
+        triviaResult.textContent = "❌ Incorrecto";
+        triviaResult.style.color = "red";
+      }
+    }
     
   });
-
-  
 
 </script>
 
