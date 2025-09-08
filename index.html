@@ -108,32 +108,40 @@
   <a-scene mindar-image="imageTargetSrc:./assets/targets/targets.mind" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
     
     <a-assets>
-      <video id="video1" src="assets/videos/argentina.mp4" preload="auto" loop></video>
-      <video id="video2" src="assets/videos/brasil.mp4" preload="auto" loop></video>
-      <a-asset-item id="model1" src="assets/modelos/Mascara.gltf"></a-asset-item>
+      <!--VIDEOS-->
+      <video id="video1" src="assets/videos/argentina.mp4" loop crossorigin="anonymous"webkit-playsinline playsinline ></video>
+      <video id="video2" src="assets/videos/brasil.mp4" loop crossorigin="anonymous" webkit-playsinline playsinline ></video>
+
+      <!--MODELOS-->
+      <a-asset-item id="model1" src="assets/modelos/mask/scene.gltf"></a-asset-item>
+
     </a-assets>
 
     <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
     <!-- Targets -->
     <a-entity mindar-image-target="targetIndex: 0">
-      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+      <a-video id="videoPlane" src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+       visible="false"></a-gltf-model>
     </a-entity>
 
     <a-entity mindar-image-target="targetIndex: 1">
-      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+      <a-video id="videoPlane" src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+       visible="false"></a-gltf-model>
     </a-entity>
 
     <a-entity mindar-image-target="targetIndex: 2">
-      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+      <a-video id="videoPlane" src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+       visible="false"></a-gltf-model>
     </a-entity>
 
     <a-entity mindar-image-target="targetIndex: 3">
-      <a-video src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-entity id="modelEntity" gltf-model="#model1" scale="0.3 0.3 0.3" position="0 -0.5 0" visible="false"></a-entity>
+      <a-video id="videoPlane" src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+       visible="false"></a-gltf-model>
     </a-entity>
     
   </a-scene>
@@ -180,28 +188,30 @@
     intro.style.display = "none";
     arContainer.classList.add("active");
 
-    // Forzar recalculo del tamaño
-    setTimeout(() => {window.dispatchEvent(new Event("resize"));}, 300);
-    
-    // Eventos de targets
+    setTimeout(() => {window.dispatchEvent(new Event("resize"));}, 300);  
+  });
 
-    const targets = document.querySelectorAll("[mindar-image-target]");
-      targets.forEach(target => {
-        target.addEventListener("targetFound", () => {
-          console.log("🎯 Bandera detectada");
-          buttonsPanel.style.display = "flex";
-        });
-        target.addEventListener("targetLost", () => {
-          console.log("❌ Bandera perdida");
-          buttonsPanel.style.display = "none";
-          statsBox.style.display = "none";
-          triviaBox.style.display = "none";
-          videoPlane.setAttribute("visible", "false");
-          modelEntity.setAttribute("visible", "false");
-          video1.pause();
-        });
-      })
-    });
+
+  const targets = document.querySelectorAll("[mindar-image-target]");
+    targets.forEach(target => {
+      target.addEventListener("targetFound", () => {
+        console.log("🎯 Bandera detectada");
+        buttonsPanel.style.display = "flex";
+      });
+
+      target.addEventListener("targetLost", () => {
+        console.log("❌ Bandera perdida");
+        buttonsPanel.style.display = "none";
+        statsBox.style.display = "none";
+        triviaBox.style.display = "none";
+
+        // Ocultar y pausar
+        videoPlane.setAttribute("visible", "false");
+        video1.pause();
+        video1.currentTime = 0; // Reinicia
+        modelEntity.setAttribute("visible", "false");
+      });
+  });
 
      // Estadisticas
     document.getElementById("btnStats").addEventListener("click", () => {
@@ -211,9 +221,12 @@
 
     // Video
     document.getElementById("btnVideo").addEventListener("click", () => {
-      const isVisible = videoPlane.getAttribute("visible");
-      videoPlane.setAttribute("visible", !isVisible);
-      if (!isVisible) video1.play(); else video1.pause();
+      videoPlane.setAttribute("visible", "true");   
+
+      video1.currentTime = 0;
+      video1.muted = false;
+      
+      video1.play().catch(err => console.log("⚠️ Error reproduciendo video:", err));
     });
 
     // Trivia
