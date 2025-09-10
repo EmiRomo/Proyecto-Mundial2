@@ -217,8 +217,9 @@
   /* Ajustes para pantallas móviles */
   @media (max-width: 768px) {
     header {
-      height: 60px; /* más bajo en móvil */
-      background-position: center; /* centra la imagen */
+      height: 60px; 
+      background-position: center; 
+      background-size: cover;
     }
 
     .header-title {
@@ -251,9 +252,9 @@
       bottom: 10%; /* súbelo un poco en móvil */
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.9rem; /* texto más pequeño */
+      font-size: 0.75rem; /* texto más pequeño */
       padding: 8px;
-      max-width: 90%; /* que no se salga de la pantalla */
+      max-width: 100%; /* que no se salga de la pantalla */
     }
 
     #triviaBox button {
@@ -272,7 +273,7 @@
     }
 
     #statsBox, #triviaBox {
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       padding: 6px;
     }
 
