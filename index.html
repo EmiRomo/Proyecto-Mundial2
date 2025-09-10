@@ -4,41 +4,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-aframe.prod.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   </head>
-  <style>
+<style>
   body, html {
     margin: 0;
     padding: 0;
-    overflow: hidden;
     font-family: Arial, sans-serif;
-    background: #1e3d4f;
-    color: white;
+    background: #edf8ff;
+    color: rgb(0, 0, 0);
     width: 100%;
     height: 100%;
+    overflow-x: hidden;
   }
-  #intro {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
+      
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background: #1e3d4f;
-    z-index: 10;
+    min-height: 100vh;
   }
+
+  header {
+    padding: 20px 0;
+    margin-bottom: 30px;
+    height: 90px;
+    background-image: url('assets/targets/img-originales/header.png');
+    background-size: cover;
+    background-position: center 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+  }
+  
+  .header-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 1200px;
+    width: 100%;
+    padding: 0 20px;
+  }
+  
+  .header-title {
+    font-size: 2.5rem;
+    margin: 0;
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  .header-subtitle {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    color: #00bfff;
+    font-weight: 300;
+  }
+  
+  .logo {
+    height: 100%; 
+    display: flex;
+    align-items: center;
+  }
+  
+  .logo-img {
+    height: 60px;
+    width: auto; 
+    max-width: 200px; 
+  }
+      
+  .content-section {
+    display: flex;
+    flex: 1;
+    gap: 40px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+      
+  .text-content {
+      flex: 1;
+      min-width: 300px;
+  }
+  
+  .image-content {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-width: 300px;
+  }
+  
+  .image-content img {
+      max-width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  h1 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: #000000;
+  }
+  
+  p {
+      line-height: 1.6;
+      font-size: 1.1rem;
+      margin-bottom: 15px;
+      color: #000000;
+  }
+  
+  .cta-section {
+      text-align: center;
+      margin-top: auto;
+      padding: 30px 0;
+  }
+        
+  .cta-text {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      color: #000000;
+  }
+        
   #startBtn {
     margin-top: 20px;
-    padding: 12px 24px;
-    font-size: 18px;
-    border: none;
-    border-radius: 8px;
-    background: #00bfff;
+    padding: 20px;
+    font-size: 1.2rem;
+    border-radius: 10%;
+    background: #fd2929;
     color: white;
     cursor: pointer;
+    transition: background 0.3s;
+    box-shadow: 0 5px 15px rgba(0, 191, 255, 0.4);
+    width: 130px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
   }
-  #startBtn:hover { background: #0099cc; }
+        
+  #startBtn:hover { 
+    background: #04d662; 
+  }
+
+  .camera-icon {
+    font-size: 2.5rem;
+  }
 
   #ar-container {
+    display: none;
     width: 100vw;
     height: 100vh;
     background: black;
@@ -48,7 +165,9 @@
     transition: opacity 0.6s ease;
     z-index: 1;
   }
+  
   #ar-container.active {
+    display: block; 
     opacity: 1;
   }
 
@@ -67,19 +186,19 @@
     font-size: 16px;
     border: none;
     border-radius: 6px;
-    background: #00bfff;
-    color: white;
+    background: #9b9b9b;
+    color: rgb(14, 14, 14);
     cursor: pointer;
   }
 
-  #buttons-panel button:hover {background: #0099cc;}
+  #buttons-panel button:hover {background: #313131;}
 
   #statsBox, #triviaBox {
     position: absolute;
-    top: 15%;
+    top: 65%;
     left: 50%;
     transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
+    background: rgba(241, 239, 239, 0.8);
     padding: 20px;
     border-radius: 8px;
     display: none;
@@ -95,208 +214,278 @@
     font-size: 14px;
   }
 
+  @media (max-width: 768px) {
+    .content-section {
+        flex-direction: column;
+    }
+    
+    header {
+        height: 200px;
+        background-position: center 25%; /* Ajuste para móviles */
+    }
+    
+    .header-title {
+        font-size: 2rem;
+    }
+    
+    .header-subtitle {
+        font-size: 1.2rem;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+    
+    .cta-text {
+        font-size: 1.5rem;
+    }
+    
+    #startBtn {
+        width: 70px;
+        height: 70px;
+    }
+    
+    .camera-icon {
+        font-size: 2rem;
+    }
+    
+    .image-content img {
+        max-height: 300px; /* Altura menor en móviles */
+    }
+  }
+
+  @media (max-width: 480px) {
+    header {
+        height: 180px;
+        background-position: center 20%; /* Ajuste para móviles pequeños */
+    }
+    
+    .header-title {
+        font-size: 1.8rem;
+    }
+    
+    .image-content img {
+        max-height: 250px; /* Altura aún menor en móviles pequeños */
+    }
+  }
+
 </style>
 
 <body>
-<div id="intro">
-  <h1>Bienvenido a la Experiencia RA</h1>
-  <p>Escanea las banderas para descubrir modelos, videos, trivias y estadísticas.</p>
-  <button id="startBtn">Activar Cámara RA</button>
-</div>
 
-<div id="ar-container">
-  <a-scene mindar-image="imageTargetSrc:./assets/targets/targets.mind" vr-mode-ui="enabled: false" device-orientation-permission-ui="enabled: false">
+  <header>
+      <div id="intro" class="header-content">
+          <h1 class="header-title">Mundial 2026</h1>
+          <p class="header-subtitle">Experiencia de Realidad Aumentada</p>
+      </div>
+  </header>
+
+  <div id="intro" class="container">
+    <section class="content-section">
+      <div class="text-content">
+        <h1>¡Vive la Emoción del Mundial!</h1>
+        <p>La Copa Mundial de la FIFA 2026 será un evento histórico, con partidos en tres países: Estados Unidos, Canadá y México. Por primera vez, 48 equipos competirán por el trofeo más preciado del fútbol mundial.</p>
+        <p>Descubre estadísticas, datos curiosos y la emoción del fútbol con nuestra experiencia de Realidad Aumentada. Escanea las banderas de los países participantes y desbloquea contenido exclusivo de cada selección.</p>
+        <p>Con nuestra tecnología RA, podrás ver modelos 3D de los jugadores, videos destacados y resolver trivias interactivas sobre la historia de los mundiales.</p>
+      </div>
+      <div class="image-content">
+        <img src="assets/targets/img-originales/estadios.jpg" alt="Estadio de fútbol">
+      </div>
+    </section>
+
+    <section class="cta-section">
+      <p class="cta-text">¡Prueba la experiencia del Mundial 2026!</p>
+      <button id="startBtn"><i class="fas fa-camera camera-icon"></i></button>
+    </section>
+  </div>
+
+  <div id="ar-container" class="ar-container"></div>
+
+  <div id="buttons-panel" class="buttons-panel">
+    <button id="btn1">Estadísticas</button>
+    <button id="btn2">Video</button>
+    <button id="btn3">Trivia</button>
+    <button id="btn4">Animar</button>
+  </div>
+
+  <div id="statsBox" class="info-box" style="display:none;"></div>
+
+  <div id="triviaBox" class="info-box">
+    <h3>❓ Trivia</h3>
+    <p id="triviaQuestion"></p>
+    <p id="triviaResult"></p>
+  </div>
+
+
+  <script>
+    const startBtn = document.getElementById("startBtn");
+    const intro = document.getElementById("intro");
+    const arContainer = document.getElementById("ar-container");
+    const buttonsPanel = document.getElementById("buttons-panel");
+    const statsBox = document.getElementById("statsBox");
     
-    <a-assets>
-      <!--VIDEOS-->
-      <video id="video1" src="assets/videos/argentina.mp4" loop crossorigin="anonymous"webkit-playsinline playsinline ></video>
-      <video id="video2" src="assets/videos/brasil.mp4" loop crossorigin="anonymous" webkit-playsinline playsinline ></video>
+    const triviaBox = document.getElementById("triviaBox");
+    const triviaQuestion = document.getElementById("triviaQuestion");
+    const triviaResult = document.getElementById("triviaResult");
 
-      <!--MODELOS-->
-      <a-asset-item id="model1" src="assets/modelos/mask/scene.gltf"></a-asset-item>
-      <a-asset-item id="model2" src="assets/modelos/mate/scene.gltf"></a-asset-item>
+    const btn1 = document.getElementById("btn1");
+    const btn2 = document.getElementById("btn2");
+    const btn3 = document.getElementById("btn3");
+    const btn4 = document.getElementById("btn4");
 
-    </a-assets>
+    const mainButtons = [btn1, btn2, btn3, btn4];
+    const originalTexts = ["Estadísticas", "Video", "Trivia", "Modelo"];
 
-    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+    const countryData = {
+      argentina: {
+        stats: `
+          <p>Mundiales Ganados: 3</p>
+          <p>Puntos de clasificación: 18 Puntos</p>
+          <p>Goles a Favor: 8</p>
+          <p>Mejor Jugador Actual: Lionel Messi</p>
+          <p>Otros Destacados: Julián Álvarez, Emiliano Martínez</p>
+          <p>Mejores Equipos: River Plate, Boca Juniors, Estudiantes</p>
+        `,
+        trivia: {
+          question: "¿Cuántos mundiales ha ganado Argentina?",
+          options: ["2", "3", "4"],
+          answer: "3"
+        }
+      },
+      mexico: {
+        stats: `
+          <p>Mejor Participación: Cuartos de Final</p>
+          <p>Puntos de clasificación: 14 Puntos</p>
+          <p>Goles a favor: 20</p>
+          <p>Mejor Jugador Actual: Edson Álvarez</p>
+          <p>Otros Destacados: Santiago Giménez, Guillermo Ochoa</p>
+          <p>Mejores Equipos: América, Chivas, Monterrey</p>
+        `,
+        trivia: {
+          question: "¿En qué año México fue anfitrión del Mundial por primera vez?",
+          options: ["1970", "1986", "2002"],
+          answer: "1970"
+        }
+      },
+      usa: {
+        stats: `
+          <p>Mejor Participación: Tercer Lugar</p>
+          <p>Puntos de clasificación: 15 Puntos</p>
+          <p>Goles a favor: 21</p>
+          <p>Mejor Jugador Actual: Christian Pulisic</p>
+          <p>Otros Destacados: Weston McKennie, Giovanni Reyna</p>
+          <p>Mejores Equipos: Columbus Crew, Inter Miami, LAFC</p>
+        `,
+        trivia: {
+          question: "¿En qué año Estados Unidos fue anfitrión del Mundial?",
+          options: ["1994", "2002", "2010"],
+          answer: "1994"
+        }
+      },
+      brasil: {
+        stats: `
+          <p>Mundiales Ganados: 5</p>
+          <p>Puntos de clasificación: 8 Puntos</p>
+          <p>Goles a Favor: 8</p>
+          <p>Mejor Jugador Actual: Vinicius Jr.</p>
+          <p>Otros Destacados: Rodrygo, Marquinhos</p>
+          <p>Mejores Equipos: Flamengo, Palmeiras, São Paulo</p>
+        `,
+        trivia: {
+          question: "¿Cuántos mundiales ha ganado Brasil?",
+          options: ["3", "5", "7"],
+          answer: "5"
+        }
+      }
+      
+    };
 
-    <!-- Targets -->
-    <a-entity mindar-image-target="targetIndex: 0">
-      <a-video id="videoPlane" src="#video1" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 1">
-      <a-video id="videoPlane" src="#video2" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 2">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 3">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 4">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 5">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 6">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 7">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
+    let currentCountry = null;
+    let triviaActive = false;
     
-    <a-entity mindar-image-target="targetIndex: 8">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 9">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 10">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 11">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-    <a-entity mindar-image-target="targetIndex: 12">
-      <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
-      <a-gltf-model id="model1" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
-       visible="false"></a-gltf-model>
-    </a-entity>
-
-  </a-scene>
-</div>
-
-<div id="buttons-panel">
-  <button id="btnStats">Estadísticas</button>
-  <button id="btnVideo">Video</button>
-  <button id="btnTrivia">Trivia</button>
-  <button id="btnModel">Modelo</button>
-</div>
-
-<div id="statsBox">
-  <h3>📊 Estadísticas</h3>
-  <p>País: Argentina</p>
-  <p>Mundiales Ganados: 3</p>
-  <p>Jugador Estrella: Messi</p>
-</div>
-
-<div id="triviaBox">
-  <h3>❓ Trivia</h3>
-  <p>¿Cuántos mundiales ha ganado Brasil?</p>
-  <button onclick="checkAnswer(3)">3</button>
-  <button onclick="checkAnswer(5)">5</button>
-  <button onclick="checkAnswer(7)">7</button>
-  <p id="triviaResult"></p>
-</div>
-
-<script>
-  const startBtn = document.getElementById("startBtn");
-  const intro = document.getElementById("intro");
-  const arContainer = document.getElementById("ar-container");
-  const buttonsPanel = document.getElementById("buttons-panel");
-
-  const statsBox = document.getElementById("statsBox");
-  const triviaBox = document.getElementById("triviaBox");
-  const triviaResult = document.getElementById("triviaResult");
-
-  const videoPlane = document.getElementById("videoPlane");
-  const video1 = document.getElementById("video1");
-  const modelEntity = document.getElementById("modelEntity");
-
-  startBtn.addEventListener("click", () => {
-    intro.style.display = "none";
-    arContainer.classList.add("active");
-
-    setTimeout(() => {window.dispatchEvent(new Event("resize"));}, 300);  
-  });
-
-
-  const targets = document.querySelectorAll("[mindar-image-target]");
-    targets.forEach(target => {
-      target.addEventListener("targetFound", () => {
-        console.log("🎯 Bandera detectada");
-        buttonsPanel.style.display = "flex";
-      });
-
-      target.addEventListener("targetLost", () => {
-        console.log("❌ Bandera perdida");
-        buttonsPanel.style.display = "none";
-        statsBox.style.display = "none";
-        triviaBox.style.display = "none";
-        modelEntity.setAttribute("visible", "false");
-
-        // Ocultar y pausar
-        videoPlane.setAttribute("visible", "false");
-        video1.pause();
-        video1.currentTime = 0; // Reinicia
-        
-      });
-  });
-
-     // Estadisticas
-    document.getElementById("btnStats").addEventListener("click", () => {
-      statsBox.style.display = statsBox.style.display === "block" ? "none" : "block";
+    //FUNCIONES 
+    function resetButtons() {
+      triviaActive = false;
       triviaBox.style.display = "none";
-    });
+
+      mainButtons.forEach((btn, i) => {
+        btn.style.display = "inline-block";
+        btn.textContent = originalTexts[i];
+        btn.onclick = mainButtonsLogic[i];
+      });
+    }
+
+    // Estadísticas
+    function showStats(country) {
+      statsBox.innerHTML = countryData[country].stats;
+      statsBox.style.display = "block";
+      triviaBox.style.display = "none";
+
+      mainButtons[0].style.display = "none";
+      mainButtons[1].style.display = "none";
+      mainButtons[2].style.display = "none";
+
+      mainButtons[3].style.display = "inline-block";
+      mainButtons[3].textContent = "Regresar";
+      mainButtons[3].onclick = () => {
+        statsBox.style.display = "none";
+        resetButtons();
+      };
+    }
 
     // Video
-    document.getElementById("btnVideo").addEventListener("click", () => {
-      videoPlane.setAttribute("visible", "true");   
+    function showVideo(country) {
+      const video = document.getElementById(`video-${country}`);
+      const plane = document.getElementById(`plane-${country}`);
+      if (!plane || !video) return;
 
-      video1.currentTime = 0;
-      video1.muted = false;
-      
-      video1.play().catch(err => console.log("⚠️ Error reproduciendo video:", err));
-    });
+      plane.setAttribute("visible", "true");
+      video.currentTime = 0;
+      video.muted = false;
+      video.play().catch(err => console.log("⚠️ Error reproduciendo video:", err));
 
-    // Trivia
-    document.getElementById("btnTrivia").addEventListener("click", () => {
-      triviaBox.style.display = triviaBox.style.display === "block" ? "none" : "block";
-      statsBox.style.display = "none";
-    });
+      mainButtons[0].style.display = "inline-block";
+      mainButtons[0].textContent = "Filtro 1";
+      mainButtons[0].onclick = () => applyFilter1(video);
 
-    // Modelo
-    document.getElementById("btnModel").addEventListener("click", () => {
-      const isVisible = modelEntity.getAttribute("visible");
-      modelEntity.setAttribute("visible", !isVisible);
+      mainButtons[1].style.display = "inline-block";
+      mainButtons[1].textContent = "Filtro 2";
+      mainButtons[1].onclick = () => applyFilter2(video);
+
+      mainButtons[2].style.display = "none"; 
+
+      mainButtons[3].style.display = "inline-block";
+      mainButtons[3].textContent = "Regresar";
+      mainButtons[3].onclick = () => {
+      plane.setAttribute("visible", "false");
+      video.pause();
+      resetButtons();
+      };
+    }
+
+    // function applyFilter1(video) {
+    //   console.log("Filtro 1 aplicado a", video.id);
+    //   triviaResult.textContent = "🎛 Filtro 1 aplicado (simulado)";
+    //   triviaResult.style.color = "yellow";
+    //   triviaBox.style.display = "block"; // reuso el panel de trivia solo para mostrar mensajes
+    // }
+
+    // function applyFilter2(video) {
+    //   console.log("Filtro 2 aplicado a", video.id);
+    //   triviaResult.textContent = "🎛 Filtro 2 aplicado (simulado)";
+    //   triviaResult.style.color = "cyan";
+    //   triviaBox.style.display = "block";
+    // }
+
+    // Animar modelo
+    function showModel(country) {
+      const model = document.getElementById(`entity-${country}`);
+      if (!model) return;
+
+      const isVisible = model.getAttribute("visible");
+      model.setAttribute("visible", !isVisible);
       if (!isVisible) {
-        modelEntity.setAttribute("animation", {
+        model.setAttribute("animation", {
           property: "rotation",
           to: "0 360 0",
           loop: true,
@@ -304,22 +493,198 @@
           easing: "linear"
         });
       } else {
-        modelEntity.removeAttribute("animation");
+        model.removeAttribute("animation");
       }
-    });
+    }
 
-    // Trivia check
-    function checkAnswer(ans) {
-      if (ans === 5) {
+    // Trivia
+    function startTrivia(country) {
+      const trivia = countryData[country].trivia;
+      if (!trivia) return;
+
+      triviaActive = true;
+      triviaBox.style.display = "block";
+      statsBox.style.display = "none";
+      triviaQuestion.textContent = trivia.question;
+      triviaResult.textContent = "";
+
+      // Cambiar botones a opciones
+      mainButtons.forEach((btn, i) => {
+        if (trivia.options[i]) {
+          btn.style.display = "inline-block";
+          btn.textContent = trivia.options[i];
+          btn.onclick = () => checkAnswer(trivia.options[i], trivia.answer);
+        } else {
+          btn.style.display = "none";
+        }
+      });
+    }
+
+    function checkAnswer(ans, correct) {
+      if (ans === correct) {
         triviaResult.textContent = "✅ Correcto!";
         triviaResult.style.color = "lightgreen";
       } else {
         triviaResult.textContent = "❌ Incorrecto";
         triviaResult.style.color = "red";
       }
+
+      setTimeout(() => resetButtons(), 1000);
     }
 
-</script>
+    // LÓGICA PARA BOTONES
+    const mainButtonsLogic = [
+      () => { if (currentCountry) showStats(currentCountry); },
+      () => { if (currentCountry) showVideo(currentCountry); },
+      () => { if (currentCountry) startTrivia(currentCountry); },
+      () => { if (currentCountry) showModel(currentCountry); }
+    ];
+
+    function initARLogic() {
+      const targets = document.querySelectorAll("[mindar-image-target]");
+
+      targets.forEach(target => {
+        const country = target.dataset.country;
+        const video = document.getElementById(`video-${country}`);
+        const plane = document.getElementById(`plane-${country}`);
+        const model = document.getElementById(`entity-${country}`);
+
+        target.addEventListener("targetFound", () => {
+          console.log("🎯 Detectado:", country);
+          currentCountry = country;
+
+          model.setAttribute("visible", "true");
+          buttonsPanel.style.display = "flex";
+          resetButtons();
+        });
+
+        target.addEventListener("targetLost", () => {
+          console.log("❌ Perdido:", country);
+          currentCountry = null;
+
+          model.setAttribute("visible", "false");
+          plane.setAttribute("visible", "false");
+          video.pause();
+
+          buttonsPanel.style.display = "none";
+          statsBox.style.display = "none";
+          triviaBox.style.display = "none";
+        });
+      });
+    }
+
+    startBtn.addEventListener("click", () => {
+      intro.style.display = "none";
+      arContainer.classList.add("active");
+
+      arContainer.innerHTML = `
+        <a-scene mindar-image="imageTargetSrc: assets/targets/targets.mind; autoStart: true;" 
+                color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights"
+                vr-mode-ui="enabled: false"
+                device-orientation-permission-ui="enabled: false">
+          
+          <a-assets>
+            <!-- VIDEOS -->
+            <video id="video-argentina" src="assets/videos/argentina.mp4" loop crossorigin="anonymous"webkit-playsinline playsinline muted ></video>
+            <video id="video-brasil" src="assets/videos/brasil.mp4" loop crossorigin="anonymous" webkit-playsinline playsinline muted ></video>
+            <video id="video-mexico" src="assets/videos/mexico.mp4" loop crossorigin="anonymous"webkit-playsinline playsinline muted ></video>
+            <video id="video-usa" src="assets/videos/usa.mp4" loop crossorigin="anonymous" webkit-playsinline playsinline muted ></video>
+
+            <!--MODELOS-->
+            <a-asset-item id="model-brasil" src="assets/modelos/mask/scene.gltf"></a-asset-item>
+            <a-asset-item id="model-argentina" src="assets/modelos/mate/scene.gltf"></a-asset-item>
+            <a-asset-item id="model-mexico" src="assets/modelos/mexico/scene.glb"></a-asset-item>
+
+          </a-assets>
+
+          <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+          <!-- Targets -->
+          <a-entity mindar-image-target="targetIndex: 0" data-country="mexico">
+            <a-video id="plane-mexico" src="#video-mexico" width="1.4" height="0.7" position="0 -0.4 0" visible="false"></a-video>
+            <a-entity id="entity-mexico" gltf-model="#model-mexico" scale="0.25 0.25 0.25" position="0 0.3 0" visible="false"></a-entity>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 1" data-country="usa">
+            <a-video id="plane-usa" src="#video-usa" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="entity-usa" src="#model-usa" rotation="0 0 0 " position="0 0 0.1" scale="2.5 2.5 2.5"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 2" data-country="pop">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model2" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 3" data-country="brasil">
+            <a-video id="plane-brasil" src="#video-brasil" width="1.6" height="0.9" position="0 -0.4 0" visible="false"></a-video>
+            <a-entity id="entity-brasil" gltf-model="#model-brasil" scale="1.0 1.0 1.0" position="0 0.3 0" visible="false"></a-entity>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 4" data-country="ja">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 5" data-country="ira">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 6" data-country="argentina">
+            <a-video id="plane-argentina" src="#video-argentina" width="1.6" height="0.9" position="0 -0.4 0" visible="false"></a-video>
+            <a-entity id="entity-argentina" gltf-model="#model-argentina" scale="1.5 1.5 1.5" position="0 0.3 0" visible="false"></a-entity>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 7" data-country="canada">
+            <a-video id="plane-canada" src="video-canada" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-entity id="entity-canada" gltf-model="#model-canada" scale="1.0 1.0 1.0" position="0 -0.5 0" visible="false"></a-entity>
+        </a-entity>
+          
+          <a-entity mindar-image-target="targetIndex: 8" data-country="aus">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 9" data-country="nz">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 10" data-country="can">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 11" data-country="uzbe">
+            <a-video id="videoPlane" src="#" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-gltf-model id="modelEntity" src="#model1" rotation="0 0 0 " position="0 0 0.1" scale="0.005 0.005 0.005"
+            visible="false"></a-gltf-model>
+          </a-entity>
+
+          <a-entity mindar-image-target="targetIndex: 12" data-country="coreasur">
+            <a-video id="plane-" src="video-" width="1.6" height="0.9" position="0 0 0" visible="false"></a-video>
+            <a-entity id="entity-" gltf-model="#model-" scale="1.0 1.0 1.0" position="0 -0.5 0" visible="false"></a-entity>
+        </a-entity>
+        </a-scene>
+      `;
+
+      setTimeout(() => {
+        window.dispatchEvent(new Event("resize"));
+      }, 300);
+
+      initARLogic();
+      resetButtons();
+
+    });
+
+  </script>
 
 </html>
 
