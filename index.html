@@ -214,141 +214,73 @@
     font-size: 14px;
   }
 
-  /* Media Queries para Responsive */
-  @media (max-width: 992px) {
-      .header-title {
-          font-size: 2.5rem;
-      }
-      
-      .header-subtitle {
-          font-size: 1.3rem;
-      }
-      
-      .content-section {
-          gap: 30px;
-      }
-  }
-  
+  /* Ajustes para pantallas móviles */
   @media (max-width: 768px) {
-      .container {
-          border-radius: 15px;
-      }
-      
-      header {
-          height: 240px;
-          padding: 15px;
-      }
-      
-      .header-title {
-          font-size: 2.2rem;
-          margin-bottom: 12px;
-      }
-      
-      .header-subtitle {
-          font-size: 1.2rem;
-          margin-bottom: 20px;
-      }
-      
-      .cta-button {
-          padding: 12px 28px;
-          font-size: 1.1rem;
-      }
-      
-      .content-section {
-          flex-direction: column;
-          padding: 30px;
-          gap: 30px;
-      }
-      
-      h1 {
-          font-size: 2.2rem;
-          text-align: center;
-      }
-      
-      .image-content img {
-          max-height: 350px;
-          width: 90%;
-      }
-      
-      .features {
-          padding: 30px 20px;
-          gap: 20px;
-      }
-      
-      .feature {
-          min-width: 100%;
-      }
-      
-      .cta-section {
-          padding: 50px 30px;
-      }
-      
-      .cta-text {
-          font-size: 1.8rem;
-      }
-      
-      #startBtn {
-          width: 80px;
-          height: 80px;
-          font-size: 1.3rem;
-      }
-  }
-  
-  @media (max-width: 576px) {
-      body {
-          padding: 15px;
-      }
-      
-      header {
-          height: 220px;
-      }
-      
-      .header-title {
-          font-size: 1.9rem;
-      }
-      
-      .header-subtitle {
-          font-size: 1.1rem;
-      }
-      
-      .content-section {
-          padding: 20px;
-      }
-      
-      h1 {
-          font-size: 1.9rem;
-      }
-      
-      p {
-          font-size: 1rem;
-      }
-      
-      .cta-section {
-          padding: 40px 20px;
-      }
-      
-      .cta-text {
-          font-size: 1.6rem;
-      }
-      
-      #startBtn {
-          width: 70px;
-          height: 70px;
-      }
-      
-      .feature {
-          padding: 20px;
-      }
-      
-      .feature i {
-          font-size: 2.5rem;
-      }
-      
-      .feature h3 {
-          font-size: 1.3rem;
-      }
+    header {
+      height: 60px; /* más bajo en móvil */
+      background-position: center; /* centra la imagen */
+    }
+
+    .header-title {
+      font-size: 1.5rem; /* título más chico */
+    }
+
+    .header-subtitle {
+      font-size: 0.9rem;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    p {
+      font-size: 1rem;
+    }
+
+    .content-section {
+      flex-direction: column; /* apila texto e imagen */
+      gap: 20px;
+    }
+
+    .image-content img {
+      max-width: 100%;
+    }
+
+    #statsBox, #triviaBox {
+      top: auto; 
+      bottom: 10%; /* súbelo un poco en móvil */
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem; /* texto más pequeño */
+      padding: 8px;
+      max-width: 90%; /* que no se salga de la pantalla */
+    }
+
+    #triviaBox button {
+      font-size: 12px;
+      padding: 6px 12px;
+    }
   }
 
+  @media (max-width: 480px) {
+    .header-title {
+      font-size: 1.2rem;
+    }
+
+    .header-subtitle {
+      font-size: 0.8rem;
+    }
+
+    #statsBox, #triviaBox {
+      font-size: 0.8rem;
+      padding: 6px;
+    }
+
+    #triviaBox button {
+      font-size: 11px;
+      padding: 5px 10px;
+    }
+  }
 </style>
 
 <body>
