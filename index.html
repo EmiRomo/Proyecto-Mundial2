@@ -191,8 +191,6 @@
     cursor: pointer;
   }
 
-  #buttons-panel button:hover {background: #313131;}
-
   #statsBox, #triviaBox {
     position: absolute;
     top: 60%;
@@ -239,7 +237,7 @@
     }
 
     .content-section {
-      flex-direction: column; /* apila texto e imagen */
+      flex-direction: column; 
       gap: 20px;
     }
 
@@ -249,12 +247,14 @@
 
     #statsBox, #triviaBox {
       top: auto; 
-      bottom: 10%; /* súbelo un poco en móvil */
+      bottom: 10%; 
       left: 50%;
       transform: translateX(-50%);
-      font-size: 0.75rem; /* texto más pequeño */
+      font-size: 0.65rem; 
       padding: 8px;
-      max-width: 100%; /* que no se salga de la pantalla */
+      width: 90%;       
+      max-width: 500px;
+      text-align: center; 
     }
 
     #triviaBox button {
@@ -273,8 +273,10 @@
     }
 
     #statsBox, #triviaBox {
-      font-size: 0.7rem;
-      padding: 6px;
+      font-size: 0.6rem;
+      padding: 10px;
+      width: 95%;       
+      max-width: 95%;
     }
 
     #triviaBox button {
@@ -533,7 +535,7 @@
         triviaResult.style.color = "red";
       }
 
-      setTimeout(() => resetButtons(), 1000);
+      setTimeout(() => resetButtons(), 500);
     }
 
     // LÓGICA PARA BOTONES
