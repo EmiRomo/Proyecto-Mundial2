@@ -251,9 +251,9 @@
       left: 50%;
       transform: translateX(-50%);
       font-size: 0.65rem; 
-      padding: 8px;
+      padding: 4px;
       width: 90%;       
-      max-width: 500px;
+      max-width: 450px;
       text-align: center; 
     }
 
@@ -600,6 +600,7 @@
             <a-asset-item id="model-brasil" src="assets/modelos/brasilao/cristeredenter.glb"></a-asset-item>
             <a-asset-item id="model-argentina" src="assets/modelos/mate/scene.gltf"></a-asset-item>
             <a-asset-item id="model-mexico" src="assets/modelos/mexico/scene.glb"></a-asset-item>
+            <a-asset-item id="model-usa" src="assets/modelos/eagle.glb"></a-asset-item>
 
           </a-assets>
 
@@ -613,8 +614,7 @@
 
           <a-entity mindar-image-target="targetIndex: 1" data-country="usa">
             <a-video id="plane-usa" src="#video-usa" width="0.5" height="0.35" position="0 -0.4 0" visible="false"></a-video>
-            <a-gltf-model id="entity-usa" src="#model-usa" rotation="0 0 0 " position="0 0 0.1" scale="2.5 2.5 2.5"
-            visible="false"></a-gltf-model>
+            <a-entity id="entity-usa" gltf-model="#model-usa" scale="0.1 0.1 0.1" position="0 0.3 0" visible="false"></a-entity>
           </a-entity>
 
           <a-entity mindar-image-target="targetIndex: 2" data-country="pop">
